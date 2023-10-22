@@ -529,7 +529,7 @@ class CircleArrayQueue {
     }
 }
 ```
- 
+
 ## 3.链表
 
 ### 3.1 基本介绍
@@ -772,5 +772,101 @@ class SingleLinkedList {
 ```
 
 #### 3.2.2 面试题
+
+获取单链表中的有效节点个数
+```java
+public int getLength(HeroNode head) {
+    if (head.next == null) {
+        return 0;
+    }
+
+    HeroNode currentNode = head.next;
+    int length = 0;
+    while (currentNode != null) {
+        length++;
+        currentNode = currentNode.next;
+    }
+
+    return length;
+}
+```
+
+获取单链表中倒数第k个节点
+```java
+public HeroNode getKNode(HeroNode head, int k) {
+    // 0.判断链表是否为空
+    if (head.next == null) {
+        return null;
+    }
+
+    // 1.先遍历获取单链表的有效个数 length
+    int length = getLength(head);
+
+    // 2.校验 k 是否正确
+    if (k <= 0 || k > length) {
+        return null;
+    }
+
+    // 3.从链表的第一个节点开始遍历 length - k 个即可得到
+    HeroNode currentNode = head.next;
+    for (int i = 0; i < length - k; i++) {
+        currentNode = currentNode.next;
+    }
+
+    return currentNode;
+}
+```
+
+单链表反转
+```java
+public void reverse(HeroNode head) {
+    // 0.判断链表是否为空
+    if (head.next == null || head.next.next == null) {
+        return;
+    }
+
+    // 1.定义一个新的头节点
+    HeroNode newHead = new HeroNode(-1, null, null);
+
+    // 2.遍历原链表
+    HeroNode currentNode = head.next;
+    HeroNode nextNode = null;
+
+    while (currentNode != null) {
+        // 1.3使用一个临时变量保存当前节点的下一个节点
+        nextNode = currentNode.next;
+        // 1.2当前节点的下一个节点执行头节点的下一个节点
+        currentNode.next = newHead.next;
+        // 1.1头节点的下一个节点指向当前节点
+        newHead.next = currentNode;
+        // 1.4当前节点等于下一个节点
+        currentNode = nextNode;
+    }
+
+    head.next = newHead.next;
+}
+```
+
+从尾到头逆序打印单链表
+```java
+public void reverseShow(HeroNode head) {
+    if (head.next == null) {
+        return;
+    }
+
+    Stack<HeroNode> stack = new Stack<>();
+    HeroNode currentNode = head.next;
+    while (currentNode != null) {
+        stack.push(currentNode);
+        currentNode = currentNode.next;
+    }
+
+    while (stack.size() > 0) {
+        System.out.println(stack.pop());
+    }
+}
+```
+
+
 
 

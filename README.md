@@ -1,5 +1,7 @@
 # 数据结构与算法
 
+[toc]
+
 ## 1. 概述
 
 ### 1.1 基本概念
@@ -866,6 +868,49 @@ public void reverseShow(HeroNode head) {
     }
 }
 ```
+
+合并连个有序的单链表，并且保持有序
+```java
+public HeroNode merge(HeroNode head1, HeroNode head2) {
+    HeroNode newHead = new HeroNode(0, "", "");
+
+    HeroNode currentNode1 = head1.next;
+    HeroNode currentNode2 = head2.next;
+    HeroNode tempNode = newHead;
+
+    while (currentNode1 != null && currentNode1 != null) {
+        if (currentNode1.no < currentNode2.no) {
+            tempNode.next = currentNode1;
+            // 如果 currentNode1 < currentNode2, currentNode1 就往后移
+            currentNode1 = currentNode1.next;
+            tempNode = tempNode.next;
+        } else if (currentNode1.no == currentNode2.no) {
+            tempNode.next = currentNode1;
+            // 如果 currentNode1 == currentNode2, currentNode1、currentNode2 就往后移
+            currentNode1 = currentNode1.next;
+            currentNode2 = currentNode2.next;
+            tempNode = tempNode.next;
+        } else {
+            // 如果 currentNode1 > currentNode2, currentNode2 就往后移
+            tempNode.next = currentNode2;
+            currentNode2 = currentNode2.next;
+            tempNode = tempNode.next;
+        }
+    }
+
+    if (currentNode1 == null) {
+        tempNode.next = currentNode2;
+    }
+
+    if (currentNode2 == null) {
+        tempNode.next = currentNode1;
+    }
+
+    return newHead;
+}
+```
+
+
 
 
 

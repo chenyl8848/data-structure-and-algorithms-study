@@ -51,6 +51,33 @@ public class SingleLinkedListDemo {
 
         System.out.println("从尾到头逆序打印单链表");
         singleLinkedList.reverseShow(singleLinkedList.getHead());
+
+        System.out.println("合并单链表并保持有序");
+        SingleLinkedList linkedList1 = new SingleLinkedList();
+        linkedList1.add(new HeroNode(1, "1", "1"));
+        linkedList1.add(new HeroNode(2, "2", "2"));
+        linkedList1.add(new HeroNode(3, "3", "3"));
+        linkedList1.add(new HeroNode(5, "5", "5"));
+        linkedList1.add(new HeroNode(9, "9", "9"));
+        System.out.println("单链表1:");
+        linkedList1.show();
+
+        SingleLinkedList linkedList2 = new SingleLinkedList();
+        linkedList2.add(new HeroNode(2, "2", "2"));
+        linkedList2.add(new HeroNode(4, "4", "4"));
+        linkedList2.add(new HeroNode(6, "6", "6"));
+        linkedList2.add(new HeroNode(8, "8", "8"));
+        linkedList2.add(new HeroNode(10, "10", "10"));
+        linkedList2.add(new HeroNode(12, "12", "12"));
+        linkedList2.add(new HeroNode(14, "14", "14"));
+        System.out.println("单链表2:");
+        linkedList2.show();
+
+        HeroNode heroNode = singleLinkedList.merge(linkedList1.getHead(), linkedList2.getHead());
+        SingleLinkedList linkedList = new SingleLinkedList();
+        linkedList.setHead(heroNode);
+        System.out.println("合并之后的新链表:");
+        linkedList.show();
     }
 }
 
@@ -349,5 +376,50 @@ class SingleLinkedList {
         while (stack.size() > 0) {
             System.out.println(stack.pop());
         }
+    }
+
+    /**
+     * 合并连个有序的单链表，并且保持有序
+     *
+     * @param head1
+     * @param head2
+     * @return
+     */
+    public HeroNode merge(HeroNode head1, HeroNode head2) {
+        HeroNode newHead = new HeroNode(0, "", "");
+
+        HeroNode currentNode1 = head1.next;
+        HeroNode currentNode2 = head2.next;
+        HeroNode tempNode = newHead;
+
+        while (currentNode1 != null && currentNode1 != null) {
+            if (currentNode1.no < currentNode2.no) {
+                tempNode.next = currentNode1;
+                // 如果 currentNode1 < currentNode2, currentNode1 就往后移
+                currentNode1 = currentNode1.next;
+                tempNode = tempNode.next;
+            } else if (currentNode1.no == currentNode2.no) {
+                tempNode.next = currentNode1;
+                // 如果 currentNode1 == currentNode2, currentNode1、currentNode2 就往后移
+                currentNode1 = currentNode1.next;
+                currentNode2 = currentNode2.next;
+                tempNode = tempNode.next;
+            } else {
+                // 如果 currentNode1 > currentNode2, currentNode2 就往后移
+                tempNode.next = currentNode2;
+                currentNode2 = currentNode2.next;
+                tempNode = tempNode.next;
+            }
+        }
+
+        if (currentNode1 == null) {
+            tempNode.next = currentNode2;
+        }
+
+        if (currentNode2 == null) {
+            tempNode.next = currentNode1;
+        }
+
+        return newHead;
     }
 }

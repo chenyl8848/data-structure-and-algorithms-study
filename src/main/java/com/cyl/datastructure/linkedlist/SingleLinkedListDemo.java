@@ -18,21 +18,21 @@ public class SingleLinkedListDemo {
         System.out.println("按顺序添加节点");
         singleLinkedList.addByOrder(new HeroNode(1, "宋江", "及时雨"));
         singleLinkedList.addByOrder(new HeroNode(6, "林冲", "豹子头"));
-        singleLinkedList.show();
+        singleLinkedList.list();
 
         System.out.println("修改节点");
         // 修改节点
         singleLinkedList.update(new HeroNode(6, "公孙胜", "入云龙"));
-        singleLinkedList.show();
+        singleLinkedList.list();
 
         // 删除节点
         System.out.println("删除节点");
         singleLinkedList.delete(2);
-        singleLinkedList.show();
+        singleLinkedList.list();
 
         System.out.println("删除节点");
         singleLinkedList.delete(6);
-        singleLinkedList.show();
+        singleLinkedList.list();
 
         singleLinkedList.delete(60);
 
@@ -47,7 +47,7 @@ public class SingleLinkedListDemo {
 
         System.out.println("反转链表");
         singleLinkedList.reverse(singleLinkedList.getHead());
-        singleLinkedList.show();
+        singleLinkedList.list();
 
         System.out.println("从尾到头逆序打印单链表");
         singleLinkedList.reverseShow(singleLinkedList.getHead());
@@ -60,7 +60,7 @@ public class SingleLinkedListDemo {
         linkedList1.add(new HeroNode(5, "5", "5"));
         linkedList1.add(new HeroNode(9, "9", "9"));
         System.out.println("单链表1:");
-        linkedList1.show();
+        linkedList1.list();
 
         SingleLinkedList linkedList2 = new SingleLinkedList();
         linkedList2.add(new HeroNode(2, "2", "2"));
@@ -71,13 +71,13 @@ public class SingleLinkedListDemo {
         linkedList2.add(new HeroNode(12, "12", "12"));
         linkedList2.add(new HeroNode(14, "14", "14"));
         System.out.println("单链表2:");
-        linkedList2.show();
+        linkedList2.list();
 
         HeroNode heroNode = singleLinkedList.merge(linkedList1.getHead(), linkedList2.getHead());
         SingleLinkedList linkedList = new SingleLinkedList();
         linkedList.setHead(heroNode);
         System.out.println("合并之后的新链表:");
-        linkedList.show();
+        linkedList.list();
     }
 }
 
@@ -258,7 +258,7 @@ class SingleLinkedList {
     /**
      * 打印链表
      */
-    public void show() {
+    public void list() {
         if (head.next == null) {
             return;
         }

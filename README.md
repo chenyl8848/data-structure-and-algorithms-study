@@ -1282,3 +1282,166 @@ class SingleCircleLinkedList {
 }
 ```
 
+## 4.栈
+
+### 4.1 基本介绍
+
+- 栈的英文为：**stack**
+- 栈是一个**先入后出**( FILO - First In Last Out)的有序列表
+- **栈(stack)**是限制线性表，元素的插入和删除只能在线性表的同一端进行
+- 允许插入和删除的一端，为变化的一端，称为**栈顶(Top)**，另一端为固定的一端，称为**栈底(Bottom)**
+- 根据栈的定义可知，最先放入栈中元素在栈底，最后放入的元素在栈顶，而删除元素刚好相反，最后放入的元素最先删除，最先放入的元素最后删除
+
+![入栈示意图](./doc/images/StackPush.png)
+
+![出栈示意图](./doc/images/StackPop.png)
+
+**栈的应用场景**
+
+- 子程序的调用：在跳往子程序前，会先将下个指令的地址存到堆栈中，直到子程序执行完后再将地址取出，以回到原来的程序中
+- 处理递归调用：和子程序的调用类似，只是除了储存下一个指令的地址外，也将参数、区域变量等数据存入堆栈中
+- 表达式的转换[中缀表达式转后缀表达式]与求值
+- 二叉树的遍历
+- 图形的深度优先(depth一first)搜索法
+
+### 4.2 数组模拟栈
+
+![数组模拟栈示意图](./doc/images/ArrayStack.png)
+
+代码实现：
+
+```java
+public class ArrayStackDemo {
+
+    public static void main(String[] args) {
+        ArrayStack arrayStack = new ArrayStack(4);
+
+        boolean flag = true;
+        Scanner scanner = new Scanner(System.in);
+        String key = "";
+
+        while (flag) {
+            System.out.println("exit:退出程序");
+            System.out.println("push:数据入栈");
+            System.out.println("pop:数据出栈");
+            System.out.println("list:遍历栈");
+
+            key = scanner.next();
+
+            switch (key) {
+                case "exit":
+                    scanner.close();
+                    flag = false;
+                    break;
+                case "push":
+                    int value = scanner.nextInt();
+                    arrayStack.push(value);
+                    break;
+                case "pop":
+                    try {
+                        int pop = arrayStack.pop();
+                        System.out.printf("出栈数据%d\n", pop);
+                        break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "list":
+                    arrayStack.list();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        System.out.println("退出程序成功~");
+    }
+}
+
+class ArrayStack {
+    /**
+     * 栈的大小
+     */
+    private int maxSize;
+
+    /**
+     * 将数据放在数组中
+     */
+    private int[] stack;
+
+    /**
+     * 栈顶
+     */
+    private int top = -1;
+
+    public ArrayStack(int maxSize) {
+        this.maxSize = maxSize;
+        this.stack = new int[maxSize];
+    }
+
+    /**
+     * 判断栈是否已满
+     *
+     * @return
+     */
+    public boolean isFull() {
+        return this.top == this.maxSize - 1;
+    }
+
+    /**
+     * 判断栈是否为空
+     *
+     * @return
+     */
+    public boolean isEmpty() {
+        return this.top == -1;
+    }
+
+    /**
+     * 入栈
+     *
+     * @param value
+     */
+    public void push(int value) {
+        // 判断栈是否已满
+        if (isFull()) {
+            System.out.println("栈已满~");
+            return;
+        }
+        top++;
+        this.stack[top] = value;
+    }
+
+    /**
+     * 出栈
+     *
+     * @return
+     */
+    public int pop() {
+        // 先判断栈是否为空
+        if (isEmpty()) {
+            throw new RuntimeException("栈为空~");
+        }
+
+        int value = this.stack[top];
+        top--;
+
+        return value;
+    }
+
+    /**
+     * 遍历栈
+     */
+    public void list() {
+        if (isEmpty()) {
+            System.out.println("栈为空~");
+            return;
+        }
+        for (int i = this.top; i >= 0; i--) {
+            System.out.printf("stack[%d]=%d\n", i, this.stack[i]);
+        }
+    }
+}
+```
+
+### 4.3 链表模拟栈
+

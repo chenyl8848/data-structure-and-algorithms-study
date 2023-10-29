@@ -36,7 +36,7 @@ public class ArrayStackDemo {
                 case "pop":
                     try {
                         int pop = arrayStack.pop();
-                        System.out.printf("出栈数据%d\n", pop);
+                        System.out.printf("出栈数据：%d\n", pop);
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 /**
  * @author：Java陈序员
- * @date：2023/10/28 22:54
- * @description：链表模拟栈
+ * @date：2023/10/29 19:57
+ * @description：使用链表模拟栈升级版
  */
-public class LinkedListStackDemo {
+public class LinkedListStackPlusDemo {
 
     public static void main(String[] args) {
-        LinkedListStack linkedListStack = new LinkedListStack(4);
+        LinkedListStackPlus linkedListStackPlus = new LinkedListStackPlus(4);
 
         boolean flag = true;
         Scanner scanner = new Scanner(System.in);
@@ -31,18 +31,18 @@ public class LinkedListStackDemo {
                     break;
                 case "push":
                     int value = scanner.nextInt();
-                    linkedListStack.push(value);
+                    linkedListStackPlus.push(value);
                     break;
                 case "pop":
                     try {
-                        int pop = linkedListStack.pop();
+                        int pop = linkedListStackPlus.pop();
                         System.out.printf("出栈数据：%d\n", pop);
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 case "list":
-                    linkedListStack.list();
+                    linkedListStackPlus.list();
                     break;
                 default:
                     break;
@@ -53,104 +53,19 @@ public class LinkedListStackDemo {
     }
 }
 
-class Node {
+class NodePlus {
+    public int data;
 
-    private int data;
+    public NodePlus next;
 
-    public Node next;
-
-    public Node(int data) {
+    public NodePlus(int data) {
         this.data = data;
-    }
-
-    public int getData() {
-        return data;
-    }
-
-    public void setData(int data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "Node{" +
-                "data=" + data +
-                '}';
     }
 }
 
-class SingleLinkedList {
-    private Node head = new Node(-1);
+class SingleLinkedListPlus {
 
-    /**
-     * 在末尾添加节点
-     *
-     * @param node
-     */
-    public void add(Node node) {
-
-        Node nextNode = head;
-
-        while (true) {
-            if (nextNode.next == null) {
-                break;
-            }
-            nextNode = nextNode.next;
-        }
-
-        nextNode.next = node;
-    }
-
-    /**
-     * 获取并移除最后一个节点
-     *
-     * @return
-     */
-    public Node getAndRemoveLastNode() {
-        if (head.next == null) {
-            throw new RuntimeException("链表为空~");
-        }
-
-        Node nextNode = head;
-
-        while (true) {
-            if (nextNode.next.next == null) {
-                break;
-            }
-            nextNode = nextNode.next;
-        }
-
-        Node lastNode = nextNode.next;
-        nextNode.next = null;
-
-        return lastNode;
-
-    }
-
-    /**
-     * 获取第 K 个节点
-     *
-     * @return
-     */
-    public Node getKNode(int k) {
-
-        if (head.next == null) {
-            throw new RuntimeException("链表为空~");
-        }
-
-        int length = getLength();
-        if (k < 1 || k > length) {
-            throw new IllegalArgumentException("参数k至少要大于等于1且要小于等于链表的有效节点个数~");
-        }
-
-        Node tempNode = head;
-
-        for (int i = 0; i < k; i++) {
-            tempNode = tempNode.next;
-        }
-
-        return tempNode;
-    }
+    public NodePlus head = new NodePlus(-1);
 
     /**
      * 获取链表有效节点的个数
@@ -164,7 +79,7 @@ class SingleLinkedList {
 
         int sum = 0;
 
-        Node tempNode = head.next;
+        NodePlus tempNode = head.next;
         while (tempNode != null) {
             sum++;
             tempNode = tempNode.next;
@@ -172,23 +87,51 @@ class SingleLinkedList {
 
         return sum;
     }
+
+    /**
+     * 获取第 K 个节点
+     *
+     * @return
+     */
+    public NodePlus getKNode(int k) {
+
+        if (head.next == null) {
+            throw new RuntimeException("链表为空~");
+        }
+
+        int length = getLength();
+        if (k < 1 || k > length) {
+            throw new IllegalArgumentException("参数k至少要大于等于1且要小于等于链表的有效节点个数~");
+        }
+
+        NodePlus tempNode = head;
+
+        for (int i = 0; i < k; i++) {
+            tempNode = tempNode.next;
+        }
+
+        return tempNode;
+    }
 }
 
-class LinkedListStack {
+class LinkedListStackPlus {
 
     private int maxSize;
 
-    private SingleLinkedList stack = new SingleLinkedList();
-
     private int top = -1;
 
-    public LinkedListStack(int maxSize) {
+    private SingleLinkedListPlus stack = new SingleLinkedListPlus();
+
+    private NodePlus head = stack.head;
+
+    private NodePlus currentNode = head;
+
+    public LinkedListStackPlus(int maxSize) {
         this.maxSize = maxSize;
     }
 
     /**
-     * 判断栈是否已满
-     *
+     * 判断栈否已满
      * @return
      */
     public boolean isFull() {
@@ -197,7 +140,6 @@ class LinkedListStack {
 
     /**
      * 判断栈是否为空
-     *
      * @return
      */
     public boolean isEmpty() {
@@ -206,35 +148,48 @@ class LinkedListStack {
 
     /**
      * 入栈
-     *
      * @param value
      */
     public void push(int value) {
+        // 判断栈是否已满
         if (isFull()) {
             System.out.println("栈已满~");
             return;
         }
 
+        NodePlus nodePlus = new NodePlus(value);
+
         this.top++;
-        this.stack.add(new Node(value));
+        currentNode.next = nodePlus;
+
+        currentNode = currentNode.next;
     }
 
     /**
      * 出栈
-     *
      * @return
      */
     public int pop() {
+        // 判栈是否为空
         if (isEmpty()) {
             throw new RuntimeException("栈为空~");
         }
 
+        int value = currentNode.data;
+
+        // 需要删除最后一个节点
+        currentNode = head;
+        for (int i = 0; i < this.top; i++) {
+            currentNode = currentNode.next;
+        }
+        currentNode.next = null;
+
         this.top--;
-        return this.stack.getAndRemoveLastNode().getData();
+        return value;
     }
 
     /**
-     * 遍历打印栈
+     * 遍历栈
      */
     public void list() {
         if (isEmpty()) {
@@ -243,7 +198,8 @@ class LinkedListStack {
         }
 
         for (int i = this.top; i >= 0; i--) {
-            System.out.printf("stack[%d]=%d\n", i, this.stack.getKNode(i + 1).getData());
+            System.out.printf("stack[%d]=%d\n", i, this.stack.getKNode(i + 1).data);
         }
     }
 }
+

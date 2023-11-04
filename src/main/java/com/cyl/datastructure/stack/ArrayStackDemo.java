@@ -20,6 +20,7 @@ public class ArrayStackDemo {
             System.out.println("exit:退出程序");
             System.out.println("push:数据入栈");
             System.out.println("pop:数据出栈");
+            System.out.println("peek:查看栈顶");
             System.out.println("list:遍历栈");
 
             key = scanner.next();
@@ -37,6 +38,14 @@ public class ArrayStackDemo {
                     try {
                         int pop = arrayStack.pop();
                         System.out.printf("出栈数据：%d\n", pop);
+                        break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "peek":
+                    try {
+                        int peek = arrayStack.peek();
+                        System.out.printf("出栈数据：%d\n", peek);
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -135,5 +144,17 @@ class ArrayStack {
         for (int i = this.top; i >= 0; i--) {
             System.out.printf("stack[%d]=%d\n", i, this.stack[i]);
         }
+    }
+
+    /**
+     * 获取栈顶元素，但不出栈
+     * @return
+     */
+    public int peek() {
+        if (isEmpty()) {
+            throw new RuntimeException("栈为空~");
+        }
+
+        return this.stack[this.top];
     }
 }

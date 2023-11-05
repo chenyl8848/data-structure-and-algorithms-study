@@ -25,6 +25,8 @@ public class ReversePolishCalculatorDemo {
 
 class ReversePolishCalculator {
 
+
+
     /**
      * 计算后缀表达式的值
      * @param expression 后缀表达式

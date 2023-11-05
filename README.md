@@ -2261,3 +2261,142 @@ class Calculator {
 }
 ```
 
+### 4.5 逆波兰计算器
+
+#### 4.5.1 前缀表达式（波兰表达式）
+
+**基本介绍：**
+
+- 前缀表达式又称波兰式，前缀表达式的运算符位于操作数之前
+
+- 举例说明： (3+4)×5-6 对应的前缀表达式就是 - × + 3 4 5 6
+
+**求值实现思路：**
+
+1. **从右至左**扫描表达式
+2. 遇到数字时，将数字压入堆栈
+3. 遇到运算符时，弹出栈顶的两个数，用运算符对它们做相应的计算（栈顶元素 和 次顶元素），并将结果入栈
+4. 重复上述过程直到表达式最左端，最后运算得出的值即为表达式的结果
+
+#### 4.5.2 中缀表达式
+
+**基本介绍：**
+
+- 中缀表达式就是常见的运算表达式，如：(3+4)×5-6
+- 中缀表达式的求值是我们人最熟悉的，但是对计算机来说却不好操作(前面我们讲的案例就能看的这个问题)。因此，在计算结果时，往往会将中缀表达式转成其它表达式来操作(一般转成后缀表达式)
+
+#### 4.5.3 后缀表达式（逆波兰表达式）
+
+**基本介绍：**
+
+- 后缀表达式又称逆波兰表达式,与前缀表达式相似，只是运算符位于操作数之后
+- 举例说明： (3+4)×5-6 对应的后缀表达式就是 3 4 + 5 × 6 –
+
+| 正常的表达式 | 逆波兰表达式  |
+| ------------ | ------------- |
+| a+b          | a b +         |
+| a+(b-c)      | a b c - +     |
+| a+(b-c)*d    | a b c – d * + |
+| a+d*(b-c)    | a d b c - * + |
+| a=1+3        | a 1 3 + =     |
+
+**求值实现思路：**
+
+1. **从左至右**扫描表达式
+2. 遇到数字时，将数字压入堆栈
+3. 遇到运算符时，弹出栈顶的两个数，用运算符对它们做相应的计算（次顶元素 和 栈顶元素），并将结果入栈
+4. 重复上述过程直到表达式最右端，最后运算得出的值即为表达式的结果
+
+例如: (3+4)×5-6 对应的后缀表达式就是 3 4 + 5 × 6 - , 针对后缀表达式求值步骤如下:
+
+1. 从左至右扫描，将 3 和 4 压入堆栈
+2. 遇到 + 运算符，因此弹出 4 和 3（4为栈顶元素，3为次顶元素），计算出 3 + 4 的值，得 7，再将 7 入栈
+3. 继续向右扫描将 5 入栈
+4. 接下来是 × 运算符，因此弹出 5 和 7，计算出 7 × 5 = 35，将 35 入栈
+5. 继续向右扫描将 6 入栈
+6. 最后是 - 运算符，因此弹出 6 和 35，计算出 35 -6 = 29，将 29 入栈
+7. 最后的栈顶运算即为计算的值
+
+**代码实现：**
+
+```java
+public class ReversePolishCalculatorDemo {
+
+    public static void main(String[] args) {
+
+//        String expression = "3 4 + 5 * 6 -";
+        String expression = "3 4 - 5 * 6 * 5 / 2 -";
+
+        ReversePolishCalculator calculator = new ReversePolishCalculator();
+        int compute = calculator.compute(expression);
+
+        System.out.printf("%s = %d", expression, compute);
+    }
+}
+
+class ReversePolishCalculator {
+
+    /**
+     * 计算后缀表达式的值
+     * @param expression 后缀表达式
+     * @return
+     */
+    public int compute(String expression) {
+        // 将表达式转成 list
+        List<String> list = Arrays.asList(expression.split(" "));
+
+        // 定义一个栈
+        Stack<String> stack = new Stack<>();
+
+        // 遍历 list
+        for (String item : list) {
+            if (item.matches("\\d+")) {
+                // 如果是多位数，就直接入栈
+                stack.push(item);
+            } else {
+                // 如果是运算符
+                int number1 = Integer.parseInt(stack.pop());
+                int number2 = Integer.parseInt(stack.pop());
+                int result = compute(number1, number2, item.charAt(0));
+                stack.push(String.valueOf(result));
+            }
+        }
+
+        int result = Integer.valueOf(stack.pop());
+        return result;
+    }
+
+    /**
+     * 运算只有两个数字的表达式
+     *
+     * @param number1  数字1
+     * @param number2  数字2
+     * @param operator 运算符
+     * @return
+     */
+    public int compute(int number1, int number2, char operator) {
+        int result = 0;
+        switch (operator) {
+            case '+':
+                result = number1 + number2;
+                break;
+            case '-':
+                // 注意是 number2 - number1
+                result = number2 - number1;
+                break;
+            case '*':
+                result = number1 * number2;
+                break;
+            case '/':
+                // 注意是 number2 / number1
+                result = number2 / number1;
+                break;
+            default:
+                break;
+        }
+
+        return result;
+    }
+}
+```
+

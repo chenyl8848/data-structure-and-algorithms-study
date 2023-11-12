@@ -2918,3 +2918,120 @@ public class MazeDemo {
     }
 }
 ```
+
+### 5.3 递归-八皇后问题
+
+八皇后问题，是一个古老而著名的问题，是回溯算法的典型案例。该问题是国际西洋棋棋手马克斯·贝瑟尔于1848年提出：在 8×8 格的国际象棋上摆放八个皇后，使其不能互相攻击，即：**任意两个皇后都不能处于同一行、同一列或同一斜线上，问有多少种摆法**。
+
+![EightQueen](./doc/images/EightQueen.png)
+
+**思路分析：**
+
+1. 第一个皇后先放第一行第一列
+
+2. 第二个皇后放在第二行第一列、然后判断是否 OK， 如果不 OK，继续放在第二列、第三列、依次把所有列都放完，找到一个合适
+
+3. 继续第三个皇后，还是第一列、第二列……直到第 8 个皇后也能放在一个不冲突的位置，算是找到了一个正确解
+
+4. 当得到一个正确解时，在栈回退到上一个栈时，就会开始回溯，即将第一个皇后，放到第一列的所有正确解，全部得到
+
+5. 然后回头继续第一个皇后放第二列，后面继续循环执行 1、2、3、4 的步骤
+
+说明：理论上应该创建一个二维数组来表示棋盘，但是实际上可以通过算法，用一个一维数组即可解决问题.。
+
+`array[8] = {0 , 4, 7, 5, 2, 6, 1, 3}`  // 对应 `array` 下标表示第几行，即第几个皇后，`arr[i] = val`, `val` 表示第 `i + 1`个皇后，放在第 `i + 1`行的第 `val + 1` 列。
+
+**代码实现：**
+
+```java
+public class EightQueueDemo {
+
+    public static void main(String[] args) {
+        EightQueue eightQueue = new EightQueue(8);
+        eightQueue.check(0);
+
+        System.out.printf("一共有 %d 种解法\n", eightQueue.getCount());
+        System.out.printf("一共判断冲突的次数： %d", eightQueue.getJudgeCount());
+    }
+}
+
+class EightQueue {
+
+    /**
+     * 表示有多少个皇后
+     */
+    private int max;
+
+    private int[] array;
+
+    private int count = 0;
+
+    private int judgeCount = 0;
+
+    public EightQueue(int max) {
+        this.max = max;
+        this.array = new int[max];
+    }
+
+    public void print() {
+        this.count++;
+        for (int i = 0; i < this.array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+
+        System.out.println();
+    }
+
+    public boolean judge(int n) {
+        this.judgeCount++;
+        for (int i = 0; i < n; i++) {
+            // 1.this.array[n] == this.array[i] 表示判断第 n 个皇后是否和前面的 n - 1 个皇后在同一列
+            // 2.Math.abs(n - i) == Math.abs(this.array[n] - this.array[i])
+            //  表示判断第 n 个皇后是否和第 i 个皇后在同一斜线上
+            // 3.因为 n 在增加，所以不用判断是否在同一行
+            if (this.array[n] == this.array[i]
+                    || Math.abs(n - i) == Math.abs(this.array[n] - this.array[i])) {
+                return false;
+            }
+
+        }
+
+        return true;
+    }
+
+    /**
+     * n 代表第几个皇后
+     *
+     * @param n
+     */
+    public void check(int n) {
+        if (this.max == n) {
+            print();
+            return;
+        }
+
+        // 依次放入皇后，判断是否有冲突
+        for (int i = 0; i < this.max; i++) {
+            // 先把当前皇后 n 放入该行的第 1 列
+            array[n] = i;
+
+            // 判断是否冲突
+            if (judge(n)) {
+                // 不冲突，接着放 n + 1
+                check(n + 1);
+            }
+
+            // 如果冲突，就继续执行 array[n] = i ，即将第 n 个皇后放置在本行后移一位的位置
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int getJudgeCount() {
+        return judgeCount;
+    }
+}
+```
+

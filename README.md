@@ -16,7 +16,7 @@
 
 程序 = 数据结构 + 算法
 
-数据结构是算法的基础, 换言之，想要学好算法，需要把数据结构学到位。
+数据结构是算法的基础，换言之，想要学好算法，需要把数据结构学到位。
 
 ### 1.2 线性结构与非线性结构
 
@@ -45,7 +45,8 @@
 
 > 当一个数组中大部分元素为０，或者为同一个值的数组时，可以使用稀疏数组来保存该数组。
 
-稀疏数组的处理方法是:
+稀疏数组的处理方法是：
+
 记录数组一共有几行几列，有多少个不同的值， 把具有不同值的元素的行列及值记录在一个小规模的数组中，从而缩小程序的规模。
 
 如图将二维数组转成稀疏数组：
@@ -166,7 +167,7 @@ public class SparseArray {
 
 思路分析：
 
-1. 队列本身是有序列表，若使用数组的结构来存储队列的数据，则队列数组的声明如下图, 其中 `maxSize` 是该队列的最大容量。
+1. 队列本身是有序列表，若使用数组的结构来存储队列的数据，则队列数组的声明如下图，其中 `maxSize` 是该队列的最大容量。
 2. 因为队列的输出、输入是分别从前后端来处理，因此需要两个变量 `front` 及 `rear` 分别记录队列前后端的下标。`front` 会随着数据输出而改变，而 `rear` 则是随着数据输入而改变，如图所示:
 
 ![队列入队出队示意图](./doc/images/queue.png)
@@ -270,9 +271,9 @@ class ArrayQueue {
      */
     public ArrayQueue(int maxSize) {
         this.maxSize = maxSize;
-        array = new int[maxSize];
-        front = -1;
-        rear = -1;
+        this.array = new int[maxSize];
+        this.front = -1;
+        this.rear = -1;
     }
 
     /**
@@ -552,7 +553,7 @@ class CircleArrayQueue {
 
 ![linkedlist.png](./doc/images/linkedlist.png)
 
-- 链表是以节点的方式来存储,是链式存储
+- 链表是以节点的方式来存储，是链式存储
 - 每个节点包含 `data` 域保存数据，`next` 域指向下一个节点
 - 链表的各个节点不一定是连续存储
 - 链表分带头节点的链表和没有头节点的链表
@@ -881,7 +882,7 @@ public void reverseShow(HeroNode head) {
 }
 ```
 
-合并连个有序的单链表，并且保持有序
+合并两个有序的单链表，并且保持有序
 ```java
 public HeroNode merge(HeroNode head1, HeroNode head2) {
     HeroNode newHead = new HeroNode(0, "", "");

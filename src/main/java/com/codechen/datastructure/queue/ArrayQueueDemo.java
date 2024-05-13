@@ -1,17 +1,17 @@
-package com.cyl.datastructure.queue;
+package com.codechen.datastructure.queue;
 
 import java.util.Scanner;
 
 /**
  * @author：Java陈序员
- * @date：2023/10/21 16:53
- * @description：
+ * @date：2023/10/21 16:02
+ * @description：使用数组模拟队列
  */
-public class CircleArrayQueueDemo {
+public class ArrayQueueDemo {
 
     public static void main(String[] args) {
         // 创建一个队列
-        CircleArrayQueue circleArrayQueue = new CircleArrayQueue(3);
+        ArrayQueue arrayQueue = new ArrayQueue(3);
 
         char key = ' ';
         Scanner scanner = new Scanner(System.in);
@@ -27,7 +27,7 @@ public class CircleArrayQueueDemo {
 
             switch (key) {
                 case 's':
-                    circleArrayQueue.showQueue();
+                    arrayQueue.showQueue();
                     break;
                 case 'e':
                     scanner.close();
@@ -36,11 +36,11 @@ public class CircleArrayQueueDemo {
                 case 'a':
                     System.out.println("请输入一个值");
                     int value = scanner.nextInt();
-                    circleArrayQueue.addQueue(value);
+                    arrayQueue.addQueue(value);
                     break;
                 case 'g':
                     try {
-                        int headValue = circleArrayQueue.getQueue();
+                        int headValue = arrayQueue.getQueue();
                         System.out.printf("取出的数据:%d\n", headValue);
                     } catch (Exception e) {
 //                        e.printStackTrace();
@@ -49,7 +49,7 @@ public class CircleArrayQueueDemo {
                     break;
                 case 'h':
                     try {
-                        int head = circleArrayQueue.peekQueue();
+                        int head = arrayQueue.peekQueue();
                         System.out.printf("队头:%d\n", head);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -64,10 +64,9 @@ public class CircleArrayQueueDemo {
         System.out.println("程序退出~");
 
     }
-
 }
 
-class CircleArrayQueue {
+class ArrayQueue {
 
     /**
      * 表示数组的最大容量
@@ -87,16 +86,18 @@ class CircleArrayQueue {
     /**
      * 存放数据，模拟队列
      */
-    private int array[];
+    private int[] array;
 
     /**
      * 构造器
      *
      * @param maxSize
      */
-    public CircleArrayQueue(int maxSize) {
+    public ArrayQueue(int maxSize) {
         this.maxSize = maxSize;
-        this.array = new int[this.maxSize];
+        array = new int[maxSize];
+        front = -1;
+        rear = -1;
     }
 
     /**
@@ -105,7 +106,7 @@ class CircleArrayQueue {
      * @return
      */
     public boolean isFull() {
-        return (this.rear + 1) % this.maxSize == this.front;
+        return this.rear == this.maxSize - 1;
     }
 
     /**
@@ -114,7 +115,7 @@ class CircleArrayQueue {
      * @return
      */
     public boolean isEmpty() {
-        return this.front == this.rear;
+        return this.rear == this.front;
     }
 
     /**
@@ -123,13 +124,15 @@ class CircleArrayQueue {
      * @param data
      */
     public void addQueue(int data) {
+        // 判断队列是否满
         if (this.isFull()) {
             System.out.println("队列已满");
             return;
         }
 
-        this.array[this.rear] = data;
-        this.rear = (this.rear + 1) % this.maxSize;
+        // rear 后移
+        this.rear++;
+        this.array[rear] = data;
     }
 
     /**
@@ -143,9 +146,8 @@ class CircleArrayQueue {
             throw new RuntimeException("队列为空,不能取数据");
         }
 
-        int value = this.array[this.front];
-        this.front = (this.front + 1) % this.maxSize;
-        return value;
+        this.front++;
+        return this.array[this.front];
     }
 
     /**
@@ -157,24 +159,21 @@ class CircleArrayQueue {
             return;
         }
 
-        // 从 front 开始遍历，遍历多少个元素
-        for (int i = this.front; i < this.front + this.size(); i++) {
-            System.out.printf("array[%d]=%d\n", i % this.maxSize, array[i % this.maxSize]);
+        for (int i = 0; i < this.array.length; i++) {
+            System.out.printf("array[%d]=%d\n", i, this.array[i]);
         }
     }
 
     /**
-     * 获取当前队列有效数字的个数
+     * 获取队列的头数据，但是不出队
+     *
+     * @return
      */
-    public int size() {
-        return (this.rear + this.maxSize - this.front) % this.maxSize;
-    }
-
     public int peekQueue() {
         if (this.isEmpty()) {
             throw new RuntimeException("队列为空,不能取数据");
         }
 
-        return this.array[front];
+        return this.array[front + 1];
     }
 }

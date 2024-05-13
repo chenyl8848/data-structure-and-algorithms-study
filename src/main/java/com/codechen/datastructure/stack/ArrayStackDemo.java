@@ -1,4 +1,4 @@
-package com.cyl.datastructure.stack;
+package com.codechen.datastructure.stack;
 
 import java.util.Scanner;
 

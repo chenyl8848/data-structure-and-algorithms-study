@@ -1,16 +1,16 @@
-package com.cyl.datastructure.stack;
+package com.codechen.datastructure.stack;
 
 import java.util.Scanner;
 
 /**
  * @author：Java陈序员
- * @date：2023/10/29 20:20
- * @description：双向链表模拟栈
+ * @date：2023/10/29 19:57
+ * @description：使用链表模拟栈升级版
  */
-public class DoubleLinkedListStackDemo {
+public class LinkedListStackPlusDemo {
 
     public static void main(String[] args) {
-        DoubleLinkedListStack doubleLinkedListStack = new DoubleLinkedListStack(4);
+        LinkedListStackPlus linkedListStackPlus = new LinkedListStackPlus(4);
 
         boolean flag = true;
         Scanner scanner = new Scanner(System.in);
@@ -31,18 +31,18 @@ public class DoubleLinkedListStackDemo {
                     break;
                 case "push":
                     int value = scanner.nextInt();
-                    doubleLinkedListStack.push(value);
+                    linkedListStackPlus.push(value);
                     break;
                 case "pop":
                     try {
-                        int pop = doubleLinkedListStack.pop();
+                        int pop = linkedListStackPlus.pop();
                         System.out.printf("出栈数据：%d\n", pop);
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 case "list":
-                    doubleLinkedListStack.list();
+                    linkedListStackPlus.list();
                     break;
                 default:
                     break;
@@ -53,47 +53,85 @@ public class DoubleLinkedListStackDemo {
     }
 }
 
-class DoubleNode {
-
+class NodePlus {
     public int data;
 
-    public DoubleNode next;
+    public NodePlus next;
 
-    public DoubleNode pre;
-
-    public DoubleNode(int data) {
+    public NodePlus(int data) {
         this.data = data;
     }
 }
 
-class DoubleLinkedList {
+class SingleLinkedListPlus {
 
-    public DoubleNode head = new DoubleNode(-1);
+    public NodePlus head = new NodePlus(-1);
 
+    /**
+     * 获取链表有效节点的个数
+     *
+     * @return
+     */
+    public int getLength() {
+        if (head.next == null) {
+            return 0;
+        }
+
+        int sum = 0;
+
+        NodePlus tempNode = head.next;
+        while (tempNode != null) {
+            sum++;
+            tempNode = tempNode.next;
+        }
+
+        return sum;
+    }
+
+    /**
+     * 获取第 K 个节点
+     *
+     * @return
+     */
+    public NodePlus getKNode(int k) {
+
+        if (head.next == null) {
+            throw new RuntimeException("链表为空~");
+        }
+
+        int length = getLength();
+        if (k < 1 || k > length) {
+            throw new IllegalArgumentException("参数k至少要大于等于1且要小于等于链表的有效节点个数~");
+        }
+
+        NodePlus tempNode = head;
+
+        for (int i = 0; i < k; i++) {
+            tempNode = tempNode.next;
+        }
+
+        return tempNode;
+    }
 }
 
-class DoubleLinkedListStack {
+class LinkedListStackPlus {
 
     private int maxSize;
 
     private int top = -1;
 
-    public DoubleLinkedList stack = new DoubleLinkedList();
+    private SingleLinkedListPlus stack = new SingleLinkedListPlus();
 
-    public DoubleNode head = stack.head;
+    private NodePlus head = stack.head;
 
-    /**
-     * 链表的最后一个节点
-     */
-    public DoubleNode currentNode = head;
+    private NodePlus currentNode = head;
 
-    public DoubleLinkedListStack(int maxSize) {
+    public LinkedListStackPlus(int maxSize) {
         this.maxSize = maxSize;
     }
 
     /**
-     * 判断栈是否已满
-     *
+     * 判断栈否已满
      * @return
      */
     public boolean isFull() {
@@ -102,7 +140,6 @@ class DoubleLinkedListStack {
 
     /**
      * 判断栈是否为空
-     *
      * @return
      */
     public boolean isEmpty() {
@@ -111,7 +148,6 @@ class DoubleLinkedListStack {
 
     /**
      * 入栈
-     *
      * @param value
      */
     public void push(int value) {
@@ -121,34 +157,35 @@ class DoubleLinkedListStack {
             return;
         }
 
-        DoubleNode doubleNode = new DoubleNode(value);
+        NodePlus nodePlus = new NodePlus(value);
 
-        currentNode.next = doubleNode;
-        doubleNode.pre = currentNode;
+        this.top++;
+        currentNode.next = nodePlus;
 
         currentNode = currentNode.next;
-        this.top++;
     }
 
     /**
      * 出栈
-     *
      * @return
      */
     public int pop() {
+        // 判栈是否为空
         if (isEmpty()) {
             throw new RuntimeException("栈为空~");
         }
 
-        int data = currentNode.data;
+        int value = currentNode.data;
 
-        // 将最后一个节点往前移动
-        currentNode = currentNode.pre;
-
+        // 需要删除最后一个节点
+        currentNode = head;
+        for (int i = 0; i < this.top; i++) {
+            currentNode = currentNode.next;
+        }
         currentNode.next = null;
-        this.top--;
 
-        return data;
+        this.top--;
+        return value;
     }
 
     /**
@@ -160,10 +197,9 @@ class DoubleLinkedListStack {
             return;
         }
 
-        DoubleNode tempNode = currentNode;
         for (int i = this.top; i >= 0; i--) {
-            System.out.printf("stack[%d]=%d\n", i, tempNode.data);
-            tempNode = tempNode.pre;
+            System.out.printf("stack[%d]=%d\n", i, this.stack.getKNode(i + 1).data);
         }
     }
 }
+

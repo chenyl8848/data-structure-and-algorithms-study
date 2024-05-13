@@ -1,4 +1,4 @@
-package com.cyl.datastructure.linkedlist;
+package com.codechen.datastructure.linkedlist;
 
 import java.util.Stack;
 
